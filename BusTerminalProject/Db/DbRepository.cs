@@ -1,6 +1,7 @@
-﻿using BusTerminal.EnitityMap;
+﻿
+using BusTerminalProject.EnitityMap;
 
-namespace BusTerminal.Db
+namespace BusTerminalProject.Db
 {
     public class DbRepository<T> : IDbRepository<T> where T : class
     {
