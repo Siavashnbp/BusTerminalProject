@@ -25,6 +25,11 @@
             throw new Exception("Item cannot be null");
         }
 
+        public T? FindById(int id)
+        {
+            return _dbContex.Set<T>().Find(id);
+        }
+
         public List<T> GetAll()
         {
             _dbContex = new BusTerminalDbContext();

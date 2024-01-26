@@ -26,9 +26,9 @@ static void Run()
         case "1":
             {
                 var busName = GetStringInput("Enter bus' name:");
-                Bus.ViewBusTypes();
+                BusModel.ViewBusTypes();
                 var busTypeValue = GetIntegerInput("Select Bust type:");
-                var busType = Bus.GetBusType(busTypeValue);
+                var busType = BusModel.GetBusType(busTypeValue);
                 AddBus(busName, busType);
                 Console.WriteLine("Bus added Sucessfully");
                 break;
@@ -47,7 +47,7 @@ static void Run()
                 {
                     Console.WriteLine($"{location.Id} - {location.Province} - {location.City} - {location.Name}");
                 }
-                var originIndex = GetIntegerInput("");
+                var originIndex = GetIntegerInput("Enter location's Id");
                 break;
             }
         default:
@@ -102,7 +102,7 @@ static int GetIntegerInput(string message)
     }
 }
 
-static void ShowBusses(List<Bus> busses)
+static void ShowBusses(List<BusModel> busses)
 {
     int index = 0;
     foreach (var bus in busses)

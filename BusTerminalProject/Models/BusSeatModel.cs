@@ -1,8 +1,8 @@
-﻿namespace BusTerminalProject.Entities
+﻿namespace BusTerminalProject.Models
 {
-    public class BusSeat
+    public class BusSeatModel
     {
-        public BusSeat(int seatNumber)
+        public BusSeatModel(int seatNumber)
         {
             SeatNumber = seatNumber;
             SeatStatus = SeatStatus.Free;

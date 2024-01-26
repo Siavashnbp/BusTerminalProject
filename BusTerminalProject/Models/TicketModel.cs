@@ -2,13 +2,13 @@
 
 namespace BusTerminalProject.Entities
 {
-    public class Ticket
+    public class TicketModel
     {
-        public Ticket()
+        public TicketModel()
         {
 
         }
-        public Ticket(string firstName, string lastName, Trip trip)
+        public TicketModel(string firstName, string lastName, TripModel trip)
         {
             PassangerFirstName = firstName;
             PassengerLastName = lastName;
@@ -19,7 +19,7 @@ namespace BusTerminalProject.Entities
         public string PassangerFirstName { get; set; }
         public string PassengerLastName { get; set; }
         public int TripId { get; set; }
-        public Trip Trip { get; set; }
+        public TripModel Trip { get; set; }
         public int SeatNumber { get; set; }
         public SeatStatus SeatStatus { get; set; }
     }

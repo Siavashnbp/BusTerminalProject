@@ -1,5 +1,6 @@
 ﻿using BusTerminalProject.Db;
 using BusTerminalProject.Entities;
+using BusTerminalProject.Models;
 namespace BusTerminalProject
 {
     public static class TerminalOperator
@@ -9,10 +10,16 @@ namespace BusTerminalProject
         static TerminalOperator()
         {
             _busRepository = DbRepository<Bus>.GetInstance();
+            _locationRepository = DbRepository<Location>.GetInstance();
         }
         public static void AddBus(string name, BusType busType)
         {
-            var bus = new Bus(name, busType);
+            var bus = new Bus()
+            {
+                Name = name,
+                BusType = busType,
+                SeatCount = busType == BusType.Normal ? 40 : 30
+            };
             _busRepository.Add(bus);
         }
         public static void AddLocation(string province, string city, string name)
@@ -23,7 +30,12 @@ namespace BusTerminalProject
             {
                 throw new Exception("This location already exists");
             }
-            var location = new Location(province, city, name);
+            var location = new Location()
+            {
+                Province = province,
+                City = city,
+                Name = name
+            };
             _locationRepository.Add(location);
         }
         public static List<Bus> GetBusses()

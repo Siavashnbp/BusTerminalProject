@@ -2,20 +2,6 @@
 {
     public class Trip
     {
-        public Trip()
-        {
-
-        }
-        public Trip(Location origin, Location destination, Bus bus)
-        {
-            OriginId = origin.Id;
-            Origin = origin;
-            DestinationId = destination.Id;
-            Destination = destination;
-            BusId = bus.Id;
-            Bus = bus;
-        }
-
         public int Id { get; set; }
         public int OriginId { get; set; }
         public Location Origin { get; set; }
