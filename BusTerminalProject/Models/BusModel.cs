@@ -4,10 +4,6 @@ namespace BusTerminalProject.Entities
 {
     public class BusModel
     {
-        public BusModel()
-        {
-
-        }
         public BusModel(string name, BusType busType)
         {
             Name = name;

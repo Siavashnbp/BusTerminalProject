@@ -20,7 +20,7 @@ static void Run()
     var option = GetStringInput("1- Add Bus\n" +
         "2- Add Location\n" +
         "3- Add Trip\n" +
-        "4- Add Location");
+        "4- View Trips");
     switch (option)
     {
         case "1":
@@ -61,6 +61,17 @@ static void Run()
                 var busId = GetIntegerInput("Enter bus' Id:");
                 var tripPrice = GetDecimalInput("Enter trip's price:");
                 AddTrip(originId, destinationId, busId, tripPrice);
+                break;
+            }
+        case "4":
+            {
+                var trips = GetTrips();
+                foreach (var trip in trips)
+                {
+                    Console.WriteLine($"{trip.Id} - Origin: {trip.Origin.ViewData()} - " +
+                        $"Destination : {trip.Destination.ViewData()} - Bus: {trip.Bus.Name} {trip.Bus.BusType} " +
+                        $"- Price: {trip.SeatPrice:M2}");
+                }
                 break;
             }
         default:

@@ -73,6 +73,37 @@ namespace BusTerminalProject
             }
             return locationModels;
         }
+        public static List<TripModel> GetTrips()
+        {
+            var trips = _tripRepository.GetAll();
+            var tripsModels = new List<TripModel>();
+            foreach (var trip in trips)
+            {
+                tripsModels.Add(
+                    new TripModel(FindLocationById(trip.OriginId)
+                    , FindLocationById(trip.DestinationId)
+                    , FindBusById(trip.BusId)));
+            }
+            return tripsModels;
+        }
+        public static LocationModel FindLocationById(int id)
+        {
+            var location = _locationRepository.FindById(id);
+            if (location is not null)
+            {
+                return new LocationModel(location.Province, location.City, location.Name);
+            }
+            throw new Exception("Location was not found");
+        }
+        public static BusModel FindBusById(int id)
+        {
+            var bus = _busRepository.FindById(id);
+            if (bus is not null)
+            {
+                return new BusModel(bus.Name, bus.BusType);
+            }
+            throw new Exception("Bus was not found");
+        }
         public static List<Ticket> GetBusReservedSeats(Trip trip)
         {
             var db = new BusTerminalDbContext();
