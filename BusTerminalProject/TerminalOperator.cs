@@ -1,7 +1,7 @@
-﻿using BusTerminal.Db;
-using BusTerminal.EnitityMap;
-using BusTerminal.Entities;
-namespace BusTerminal
+﻿using BusTerminalProject.Db;
+using BusTerminalProject.EnitityMap;
+using BusTerminalProject.Entities;
+namespace BusTerminalProject
 {
     public static class TerminalOperator
     {

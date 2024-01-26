@@ -1,4 +1,4 @@
-﻿namespace BusTerminal.Db
+﻿namespace BusTerminalProject.Db
 {
     public interface IDbRepository<T> where T : class
     {

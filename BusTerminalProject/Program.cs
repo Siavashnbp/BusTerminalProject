@@ -1,5 +1,5 @@
-﻿using BusTerminal.Entities;
-using static BusTerminal.TerminalOperator;
+﻿using BusTerminalProject.Entities;
+using static BusTerminalProject.TerminalOperator;
 
 while (true)
 {
