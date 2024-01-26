@@ -27,5 +27,6 @@
         public decimal SeatPrice { get; set; }
         public int ReserveCancelation { get; set; }
         public int PrchaseCancelation { get; set; }
+        public List<Ticket>? Tickets { get; set; }
     }
 }

@@ -18,8 +18,8 @@ while (true)
 static void Run()
 {
     var option = GetStringInput("1- Add Bus\n" +
-        "2- View All Buses\n" +
-        "3- Show Seats\n" +
+        "2- Add Location\n" +
+        "3- Add Trip\n" +
         "4- Add Location");
     switch (option)
     {
@@ -35,22 +35,19 @@ static void Run()
             }
         case "2":
             {
-                var busses = GetBusses();
-                ShowBusses(busses);
+                var province = GetStringInput("Enter province:");
+                var city = GetStringInput("Enter city:");
+                var locationName = GetStringInput("Enter location's name:");
                 break;
             }
         case "3":
             {
-                var busses = GetBusses();
-                ShowBusses(busses);
-                var busIndex = GetIntegerInput("Enter bus' index:");
-                if (busIndex < 0 || busIndex >= busses.Count)
+                var locations = GetLocations();
+                foreach (var location in locations)
                 {
-                    throw new Exception("Out of range index");
+                    Console.WriteLine($"{location.Id} - {location.Province} - {location.City} - {location.Name}");
                 }
-                var bus = busses[busIndex];
-                GetBusSeats(bus);
-                bus.ShowSeats();
+                var originIndex = GetIntegerInput("");
                 break;
             }
         default:

@@ -12,9 +12,9 @@
             BusType = busType;
             var seatCount = busType == BusType.VIP ? 30 : 44;
             BusSeats = new List<BusSeat>();
-            for (int id = 1; id <= seatCount; id++)
+            for (int seatNumber = 1; seatNumber <= seatCount; seatNumber++)
             {
-                BusSeats.Add(new BusSeat(id, this));
+                BusSeats.Add(new(seatNumber));
             }
         }
         public int Id { get; set; }

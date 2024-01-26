@@ -1,6 +1,4 @@
-﻿using BusTerminal.EnitityMap;
-
-namespace BusTerminalProject.Db
+﻿namespace BusTerminalProject.Db
 {
     public class DbRepository<T> : IDbRepository<T> where T : class
     {
@@ -19,7 +17,7 @@ namespace BusTerminalProject.Db
                 var changes = _dbContex.SaveChanges();
                 if (changes < 1)
                 {
-                    throw new Exception("Changes were nos saved");
+                    throw new Exception("Changes were not saved");
                 }
                 _dbContex.Dispose();
                 return;
