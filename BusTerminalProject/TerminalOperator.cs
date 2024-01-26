@@ -7,10 +7,12 @@ namespace BusTerminalProject
     {
         private static readonly DbRepository<Bus> _busRepository;
         private static readonly DbRepository<Location> _locationRepository;
+        private static readonly DbRepository<Trip> _tripRepository;
         static TerminalOperator()
         {
             _busRepository = DbRepository<Bus>.GetInstance();
             _locationRepository = DbRepository<Location>.GetInstance();
+            _tripRepository = DbRepository<Trip>.GetInstance();
         }
         public static void AddBus(string name, BusType busType)
         {
@@ -38,13 +40,38 @@ namespace BusTerminalProject
             };
             _locationRepository.Add(location);
         }
-        public static List<Bus> GetBusses()
+        public static void AddTrip(int originId, int destinationId, int busId, decimal price)
         {
-            return _busRepository.GetAll();
+            var trip = new Trip
+            {
+                BusId = busId,
+                OriginId = originId,
+                DestinationId = destinationId,
+                SeatPrice = price,
+                PurchaseCancelation = 0,
+                ReserveCancelation = 0,
+            };
+            _tripRepository.Add(trip);
         }
-        public static List<Location> GetLocations()
+        public static List<BusModel> GetBusses()
         {
-            return _locationRepository.GetAll();
+            var busses = _busRepository.GetAll();
+            var busModels = new List<BusModel>();
+            foreach (var bus in busses)
+            {
+                busModels.Add(new BusModel(bus.Name, bus.BusType));
+            }
+            return busModels;
+        }
+        public static List<LocationModel> GetLocations()
+        {
+            var locations = _locationRepository.GetAll();
+            var locationModels = new List<LocationModel>();
+            foreach (var location in locations)
+            {
+                locationModels.Add(new LocationModel(location.Province, location.City, location.Name));
+            }
+            return locationModels;
         }
         public static List<Ticket> GetBusReservedSeats(Trip trip)
         {

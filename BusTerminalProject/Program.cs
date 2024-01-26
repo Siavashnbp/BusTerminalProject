@@ -47,7 +47,20 @@ static void Run()
                 {
                     Console.WriteLine($"{location.Id} - {location.Province} - {location.City} - {location.Name}");
                 }
-                var originIndex = GetIntegerInput("Enter location's Id");
+                var originId = GetIntegerInput("Enter origin's Id");
+                var destinationId = GetIntegerInput("Enter destination's Id");
+                if (originId == destinationId)
+                {
+                    throw new Exception("Origin and Destination cannot be the same locations");
+                }
+                var busses = GetBusses();
+                foreach (var bus in busses)
+                {
+                    Console.WriteLine($"{bus.Id} - {bus.Name} - {bus.BusType}");
+                }
+                var busId = GetIntegerInput("Enter bus' Id:");
+                var tripPrice = GetDecimalInput("Enter trip's price:");
+                AddTrip(originId, destinationId, busId, tripPrice);
                 break;
             }
         default:
@@ -101,7 +114,6 @@ static int GetIntegerInput(string message)
         Console.WriteLine("Invalid input");
     }
 }
-
 static void ShowBusses(List<BusModel> busses)
 {
     int index = 0;

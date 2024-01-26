@@ -23,7 +23,6 @@
         public LocationModel Destination { get; set; }
         public int BusId { get; set; }
         public BusModel Bus { get; set; }
-        public DateTime DepartureTime { get; set; }
         public decimal SeatPrice { get; set; }
         public int ReserveCancelation { get; set; }
         public int PrchaseCancelation { get; set; }

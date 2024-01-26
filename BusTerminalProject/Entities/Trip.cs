@@ -9,10 +9,9 @@
         public Location Destination { get; set; }
         public int BusId { get; set; }
         public Bus Bus { get; set; }
-        public DateTime DepartureTime { get; set; }
         public decimal SeatPrice { get; set; }
         public int ReserveCancelation { get; set; }
-        public int PrchaseCancelation { get; set; }
+        public int PurchaseCancelation { get; set; }
         public List<Ticket>? Tickets { get; set; }
     }
 }
