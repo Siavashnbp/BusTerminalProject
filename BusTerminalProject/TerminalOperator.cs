@@ -1,5 +1,4 @@
 ﻿using BusTerminalProject.Db;
-using BusTerminalProject.EnitityMap;
 using BusTerminalProject.Entities;
 namespace BusTerminalProject
 {
