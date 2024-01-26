@@ -9,9 +9,9 @@ namespace BusTerminalProject.Db
 
         }
         public DbSet<Bus> Buses { get; set; }
-        public DbSet<BusSeat> BusSeats { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Trip> Trips { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=DESKTOP-J9VL7Q5\\SQLEXPRESS;Initial Catalog=TaavBusTerminal;" +

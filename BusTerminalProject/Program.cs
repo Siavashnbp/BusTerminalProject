@@ -18,39 +18,49 @@ while (true)
 static void Run()
 {
     var option = GetStringInput("1- Add Bus\n" +
-        "2- View All Buses\n" +
-        "3- Show Seats\n" +
+        "2- Add Location\n" +
+        "3- Add Trip\n" +
         "4- Add Location");
     switch (option)
     {
         case "1":
             {
                 var busName = GetStringInput("Enter bus' name:");
-                Bus.ViewBusTypes();
+                BusModel.ViewBusTypes();
                 var busTypeValue = GetIntegerInput("Select Bust type:");
-                var busType = Bus.GetBusType(busTypeValue);
+                var busType = BusModel.GetBusType(busTypeValue);
                 AddBus(busName, busType);
                 Console.WriteLine("Bus added Sucessfully");
                 break;
             }
         case "2":
             {
-                var busses = GetBusses();
-                ShowBusses(busses);
+                var province = GetStringInput("Enter province:");
+                var city = GetStringInput("Enter city:");
+                var locationName = GetStringInput("Enter location's name:");
                 break;
             }
         case "3":
             {
-                var busses = GetBusses();
-                ShowBusses(busses);
-                var busIndex = GetIntegerInput("Enter bus' index:");
-                if (busIndex < 0 || busIndex >= busses.Count)
+                var locations = GetLocations();
+                foreach (var location in locations)
                 {
-                    throw new Exception("Out of range index");
+                    Console.WriteLine($"{location.Id} - {location.Province} - {location.City} - {location.Name}");
                 }
-                var bus = busses[busIndex];
-                GetBusSeats(bus);
-                bus.ShowSeats();
+                var originId = GetIntegerInput("Enter origin's Id");
+                var destinationId = GetIntegerInput("Enter destination's Id");
+                if (originId == destinationId)
+                {
+                    throw new Exception("Origin and Destination cannot be the same locations");
+                }
+                var busses = GetBusses();
+                foreach (var bus in busses)
+                {
+                    Console.WriteLine($"{bus.Id} - {bus.Name} - {bus.BusType}");
+                }
+                var busId = GetIntegerInput("Enter bus' Id:");
+                var tripPrice = GetDecimalInput("Enter trip's price:");
+                AddTrip(originId, destinationId, busId, tripPrice);
                 break;
             }
         default:
@@ -104,8 +114,7 @@ static int GetIntegerInput(string message)
         Console.WriteLine("Invalid input");
     }
 }
-
-static void ShowBusses(List<Bus> busses)
+static void ShowBusses(List<BusModel> busses)
 {
     int index = 0;
     foreach (var bus in busses)
