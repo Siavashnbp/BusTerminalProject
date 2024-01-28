@@ -1,4 +1,5 @@
 ﻿using BusTerminalProject.Entities;
+using BusTerminalProject.Models;
 using static BusTerminalProject.TerminalOperator;
 
 while (true)
@@ -20,15 +21,18 @@ static void Run()
     var option = GetStringInput("1- Add Bus\n" +
         "2- Add Location\n" +
         "3- Add Trip\n" +
-        "4- View Trips");
+        "4- View Trips\n" +
+        "5- Reserve Ticket\n" +
+        "6- Purchase Ticket\n" +
+        "7- Cancle Ticket");
     switch (option)
     {
         case "1":
             {
                 var busName = GetStringInput("Enter bus' name:");
-                BusModel.ViewBusTypes();
+                ViewBusTypes();
                 var busTypeValue = GetIntegerInput("Select Bust type:");
-                var busType = BusModel.GetBusType(busTypeValue);
+                var busType = GetBusType(busTypeValue);
                 AddBus(busName, busType);
                 Console.WriteLine("Bus added Sucessfully");
                 break;
@@ -56,7 +60,7 @@ static void Run()
                 var busses = GetBusses();
                 foreach (var bus in busses)
                 {
-                    Console.WriteLine($"{bus.Id} - {bus.Name} - {bus.BusType}");
+                    Console.WriteLine($"{bus.Id} - {bus.Name} - {(bus is BusModel ? "Normal" : "Vip")}");
                 }
                 var busId = GetIntegerInput("Enter bus' Id:");
                 var tripPrice = GetDecimalInput("Enter trip's price:");
@@ -65,17 +69,61 @@ static void Run()
             }
         case "4":
             {
-                var trips = GetTrips();
-                foreach (var trip in trips)
+                ViewTrips();
+                break;
+            }
+        case "5":
+            {
+                ViewTrips();
+                var tripId = GetIntegerInput("Enter trip's id:");
+                var trip = FindTripbyId(tripId);
+                ShowBusSeats(trip);
+                var seatNumber = GetIntegerInput("Enter seat number:");
+                var isSeatFree = CheckSeatIsfree(tripId, seatNumber);
+                if (!isSeatFree)
                 {
-                    Console.WriteLine($"{trip.Id} - Origin: {trip.Origin.ViewData()} - " +
-                        $"Destination : {trip.Destination.ViewData()} - Bus: {trip.Bus.Name} {trip.Bus.BusType} " +
-                        $"- Price: {trip.SeatPrice:M2}");
+                    throw new Exception($"Seat number {seatNumber} is not free");
                 }
+                var passengerFirstName = GetStringInput("Enter passenger's first name:");
+                var passengerLastName = GetStringInput("Enter passenger's last name:");
+                Console.WriteLine($"reserve Price: {trip.GetReservePrice()}");
+                ReserveTicket(trip, passengerFirstName, passengerLastName, seatNumber);
+                Console.WriteLine("Ticket is sucessfully reserved");
+                break;
+            }
+        case "6":
+            {
+                ViewTrips();
+                var tripId = GetIntegerInput("Enter trip's id:");
+                var trip = FindTripbyId(tripId);
+                ShowBusSeats(trip);
+                var seatNumber = GetIntegerInput("Enter seat number:");
+                var isSeatFree = CheckSeatIsfree(tripId, seatNumber);
+                if (!isSeatFree)
+                {
+                    throw new Exception($"Seat number {seatNumber} is not free");
+                }
+                var passengerFirstName = GetStringInput("Enter passenger's first name:");
+                var passengerLastName = GetStringInput("Enter passenger's last name:");
+                Console.WriteLine($"reserve Price: {trip.SeatPrice}");
+                PurchaseTicket(trip, passengerFirstName, passengerLastName, seatNumber);
+                Console.WriteLine("Ticket is sucessfully purchased");
+                break;
+            }
+        case "7":
+            {
+                var tickets = GetAllTickets();
+                foreach (var ticket in tickets)
+                {
+                    Console.WriteLine($"{ticket.Id} - {ticket.PassangerFirstName} {ticket.PassengerLastName}" +
+                        $" - {ticket.Trip.Origin.ViewData()} to {ticket.Trip.Destination.ViewData()}");
+                }
+                var ticketId = GetIntegerInput("Enter ticket's id:");
+                CancleTicket(ticketId);
                 break;
             }
         default:
-            break;
+            throw new Exception("Invalid Input");
     }
     Console.WriteLine("__________________________");
     Console.WriteLine("Press any Key to Continue");
@@ -130,6 +178,29 @@ static void ShowBusses(List<BusModel> busses)
     int index = 0;
     foreach (var bus in busses)
     {
-        Console.WriteLine($"{index++}- {bus.Name}, {bus.BusType}");
+        Console.WriteLine($"{index++}- {bus.Name}, {(bus is BusModel ? "Normal" : "Vip")}");
+    }
+}
+
+static void ViewTrips()
+{
+    var trips = GetTrips();
+    foreach (var trip in trips)
+    {
+        Console.WriteLine($"{trip.Id} - Origin: {trip.Origin.ViewData()} - " +
+            $"Destination : {trip.Destination.ViewData()} - Bus: {trip.Bus.Name} " +
+            $"{(trip.Bus is BusModel ? "Normal" : "Vip")} - Price: {trip.SeatPrice:M2}");
+    }
+}
+static void ShowBusSeats(TripModel trip)
+{
+    if (trip.Bus is BusModel)
+    {
+        trip.Bus.ShowSeats();
+    }
+    else
+    {
+        var bus = trip.Bus as BusVipModel;
+        bus!.ShowSeats();
     }
 }

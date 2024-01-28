@@ -8,5 +8,6 @@
         public string Name { get; set; }
         public List<Trip> TripsAsOrigin { get; set; }
         public List<Trip> TripsAsDestination { get; set; }
+
     }
 }

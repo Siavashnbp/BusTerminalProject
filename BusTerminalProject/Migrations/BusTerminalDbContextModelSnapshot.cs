@@ -40,7 +40,7 @@ namespace BusTerminalProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Buses");
+                    b.ToTable("Buses", (string)null);
                 });
 
             modelBuilder.Entity("BusTerminalProject.Entities.Location", b =>
@@ -68,7 +68,7 @@ namespace BusTerminalProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("BusTerminalProject.Entities.Ticket", b =>
@@ -102,7 +102,7 @@ namespace BusTerminalProject.Migrations
 
                     b.HasIndex("TripId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("BusTerminalProject.Entities.Trip", b =>
@@ -143,7 +143,7 @@ namespace BusTerminalProject.Migrations
 
                     b.HasIndex("OriginId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("BusTerminalProject.Entities.Ticket", b =>

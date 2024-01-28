@@ -18,5 +18,8 @@
         public int ReserveCancelation { get; set; }
         public int PrchaseCancelation { get; set; }
         public List<TicketModel>? Tickets { get; set; }
+        public decimal TotalIncome { get; set; }
+        public decimal GetReservePrice() => (0.3M * SeatPrice);
+
     }
 }

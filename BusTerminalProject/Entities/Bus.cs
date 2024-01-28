@@ -9,4 +9,9 @@ namespace BusTerminalProject.Entities
         public List<Trip>? Trips { get; set; }
         public int SeatCount { get; set; }
     }
+    public enum BusType
+    {
+        Normal,
+        Vip
+    }
 }

@@ -11,5 +11,6 @@ namespace BusTerminalProject.Entities
         public Trip Trip { get; set; }
         public int SeatNumber { get; set; }
         public SeatStatus SeatStatus { get; set; }
+        public decimal PaidPrice { get; set; }
     }
 }
