@@ -25,8 +25,20 @@
             throw new Exception("Item cannot be null");
         }
 
+        public void Delete(T entity)
+        {
+            _dbContex = new BusTerminalDbContext();
+            _dbContex.Set<T>().Remove(entity);
+            var changes = _dbContex.SaveChanges();
+            if (changes < 1)
+            {
+                throw new Exception("Changes were not saved");
+            }
+        }
+
         public T? FindById(int id)
         {
+            _dbContex = new BusTerminalDbContext();
             return _dbContex.Set<T>().Find(id);
         }
 
@@ -34,6 +46,17 @@
         {
             _dbContex = new BusTerminalDbContext();
             return _dbContex.Set<T>().ToList();
+        }
+
+        public void Update(T entity)
+        {
+            _dbContex = new BusTerminalDbContext();
+            _dbContex.Update(entity);
+            var changes = _dbContex.SaveChanges();
+            if (changes < 1)
+            {
+                throw new Exception("Changes were not saved");
+            }
         }
     }
 }

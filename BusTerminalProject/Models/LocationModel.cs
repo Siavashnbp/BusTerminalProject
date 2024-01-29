@@ -14,5 +14,9 @@
         public string Name { get; set; }
         public List<TripModel> TripsAsOrigin { get; set; }
         public List<TripModel> TripsAsDestination { get; set; }
+        public string ViewData()
+        {
+            return Province + " - " + City + " - " + Name;
+        }
     }
 }

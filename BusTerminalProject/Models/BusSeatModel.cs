@@ -15,6 +15,7 @@
     {
         Free,
         Reserved,
-        Purchased
+        Purchased,
+        Canceled
     }
 }
