@@ -3,7 +3,7 @@
     public class DbRepository<T> : IDbRepository<T> where T : class
     {
         private static DbRepository<T>? _dbRepositoryInstance;
-        private BusTerminalDbContext _dbContex;
+        private BusTerminalDbContext? _dbContex;
         private DbRepository()
         {
         }

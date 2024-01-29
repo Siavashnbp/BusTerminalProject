@@ -10,7 +10,7 @@ namespace BusTerminalProject.EnitityMap
         {
             builder.HasKey(_ => _.Id);
             builder.Property(_ => _.Id).UseIdentityColumn();
-            builder.Property(_ => _.Name).HasMaxLength(50);
+            builder.Property(_ => _.Name).HasMaxLength(50).IsRequired();
         }
     }
 }

@@ -10,6 +10,7 @@ while (true)
     }
     catch (Exception exception)
     {
+        Console.Clear();
         PrintStarSeprator();
         Console.WriteLine(exception.Message);
         PrintStarSeprator();
@@ -105,6 +106,10 @@ static void Run()
                 var trip = FindTripbyId(tripId);
                 ShowBusSeats(trip);
                 var seatNumber = GetIntegerInput("Enter seat number:");
+                if (seatNumber < 1 || seatNumber > trip.Bus.BusSeats.Count)
+                {
+                    throw new Exception("Seat number is out of range");
+                }
                 var isSeatFree = CheckSeatIsfree(tripId, seatNumber);
                 if (!isSeatFree)
                 {
@@ -122,7 +127,8 @@ static void Run()
                 var tickets = GetAllTickets().Where(_ => _.SeatStatus >= 0).ToList();
                 foreach (var ticket in tickets)
                 {
-                    Console.WriteLine($"{ticket.Id} - {ticket.PassangerFirstName} {ticket.PassengerLastName}" +
+                    Console.WriteLine($"{ticket.Id} - {ticket.PassangerFirstName} {ticket.PassengerLastName} - " +
+                        $"Seat Number: {ticket.SeatNumber}" +
                         $" - {ticket.Trip.Origin.ViewData()} to {ticket.Trip.Destination.ViewData()}");
                 }
                 var ticketId = GetIntegerInput("Enter ticket's id:");
@@ -165,12 +171,17 @@ static string GetStringInput(string message)
     while (true)
     {
         Console.WriteLine(message);
+        Console.WriteLine("Type ABORT! to abort operation");
         var input = Console.ReadLine();
-        if (!string.IsNullOrWhiteSpace(input))
+        if (input == "ABORT!")
+        {
+            throw new Exception("Operation was canceled by operator");
+        }
+        else if (!string.IsNullOrWhiteSpace(input))
         {
             return input;
         }
-        Console.WriteLine("Invalid Input");
+        throw new Exception("Invalid Input");
     }
 }
 static decimal GetDecimalInput(string message)
@@ -178,12 +189,18 @@ static decimal GetDecimalInput(string message)
     while (true)
     {
         Console.WriteLine(message);
-        var isValidInput = decimal.TryParse(Console.ReadLine(), out decimal value);
+        Console.WriteLine("Type ABORT! to abort operation");
+        var input = Console.ReadLine();
+        var isValidInput = decimal.TryParse(input, out decimal value);
         if (isValidInput && value >= 0)
         {
             return value;
         }
-        Console.WriteLine("Invalid input");
+        else if (input == "ABORT!")
+        {
+            throw new Exception("Operation was canceled by operator");
+        }
+        throw new Exception("Invalid input");
     }
 }
 static int GetIntegerInput(string message)
@@ -191,20 +208,18 @@ static int GetIntegerInput(string message)
     while (true)
     {
         Console.WriteLine(message);
-        var isValidInput = int.TryParse(Console.ReadLine(), out int value);
+        Console.WriteLine("Type ABORT! to abort operation");
+        var input = Console.ReadLine();
+        var isValidInput = int.TryParse(input, out int value);
         if (isValidInput && value >= 0)
         {
             return value;
         }
-        Console.WriteLine("Invalid input");
-    }
-}
-static void ShowBusses(List<BusModel> busses)
-{
-    int index = 0;
-    foreach (var bus in busses)
-    {
-        Console.WriteLine($"{index++}- {bus.Name}, {(bus is BusModel ? "Normal" : "Vip")}");
+        else if (input == "ABORT!")
+        {
+            throw new Exception("Operation was canceled by operator");
+        }
+        throw new Exception("Invalid input");
     }
 }
 

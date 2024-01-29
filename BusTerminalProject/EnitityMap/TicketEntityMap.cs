@@ -10,8 +10,8 @@ namespace BusTerminalProject.EnitityMap
         {
             builder.HasKey(_ => _.Id);
             builder.Property(_ => _.Id).UseIdentityColumn();
-            builder.Property(_ => _.PassangerFirstName).HasMaxLength(50);
-            builder.Property(_ => _.PassengerLastName).HasMaxLength(50);
+            builder.Property(_ => _.PassangerFirstName).HasMaxLength(50).IsRequired();
+            builder.Property(_ => _.PassengerLastName).HasMaxLength(50).IsRequired();
             builder.HasOne(_ => _.Trip).WithMany(_ => _.Tickets)
                 .HasForeignKey(_ => _.TripId).OnDelete(DeleteBehavior.NoAction);
         }

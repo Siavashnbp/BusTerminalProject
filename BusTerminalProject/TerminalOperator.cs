@@ -63,14 +63,14 @@ namespace BusTerminalProject
             {
                 if (bus.BusType == BusType.Normal)
                 {
-                    busModels.Add(new BusModel(bus.Name)
+                    busModels.Add(new BusModel(bus.Name!)
                     {
                         Id = bus.Id,
                     });
                 }
                 else
                 {
-                    busModels.Add(new BusVipModel(bus.Name)
+                    busModels.Add(new BusVipModel(bus.Name!)
                     {
                         Id = bus.Id
                     });
@@ -124,11 +124,11 @@ namespace BusTerminalProject
             {
                 if (bus.BusType == BusType.Vip)
                 {
-                    return new BusVipModel(bus.Name);
+                    return new BusVipModel(bus.Name!);
                 }
                 else
                 {
-                    return new BusModel(bus.Name);
+                    return new BusModel(bus.Name!);
                 }
             }
             throw new Exception("Bus was not found");

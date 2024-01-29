@@ -13,7 +13,7 @@ namespace BusTerminalProject.Models
             BusSeats = new List<BusSeatModel>();
             for (int i = 1; i <= 30; i++)
             {
-                var ticket = tickets.SingleOrDefault(_ => _.SeatNumber == i);
+                var ticket = tickets?.SingleOrDefault(_ => _.SeatNumber == i);
                 BusSeats.Add(new BusSeatModel(i)
                 {
                     SeatStatus = ticket is null ? SeatStatus.Free : ticket.SeatStatus
