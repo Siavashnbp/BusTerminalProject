@@ -13,12 +13,24 @@ namespace BusTerminalProject.Entities
         public List<BusSeatModel> BusSeats { get; set; }
         public List<TripModel>? Trips { get; set; }
 
+        public virtual void FillSeats(List<TicketModel>? tickets)
+        {
+            BusSeats = new List<BusSeatModel>();
+            for (int i = 1; i <= 44; i++)
+            {
+                var ticket = tickets?.SingleOrDefault(_ => _.SeatNumber == i);
+                BusSeats.Add(new BusSeatModel(i)
+                {
+                    SeatStatus = ticket is null ? SeatStatus.Free : ticket.SeatStatus
+                });
+            }
+        }
         public virtual void ShowSeats()
         {
-
             foreach (var seat in BusSeats)
             {
-                Console.Write($"{seat.SeatNumber:D2}");
+                Console.Write($"{(seat.SeatStatus == SeatStatus.Free ? seat.SeatNumber
+                    : seat.SeatStatus == SeatStatus.Reserved ? "rr" : "bb"):D2}");
                 if (seat.SeatNumber % 2 == 1)
                 {
                     Console.Write(" ");
@@ -32,8 +44,6 @@ namespace BusTerminalProject.Entities
                     Console.Write("\t");
                 }
             }
-
-
         }
     }
 }

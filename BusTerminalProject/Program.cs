@@ -24,7 +24,9 @@ static void Run()
         "4- View Trips\n" +
         "5- Reserve Ticket\n" +
         "6- Purchase Ticket\n" +
-        "7- Cancle Ticket");
+        "7- Cancle Ticket\n" +
+        "8- View Trip Report\n" +
+        "0- Exit");
     switch (option)
     {
         case "1":
@@ -42,6 +44,7 @@ static void Run()
                 var province = GetStringInput("Enter province:");
                 var city = GetStringInput("Enter city:");
                 var locationName = GetStringInput("Enter location's name:");
+                AddLocation(province, city, locationName);
                 break;
             }
         case "3":
@@ -60,7 +63,7 @@ static void Run()
                 var busses = GetBusses();
                 foreach (var bus in busses)
                 {
-                    Console.WriteLine($"{bus.Id} - {bus.Name} - {(bus is BusModel ? "Normal" : "Vip")}");
+                    Console.WriteLine($"{bus.Id} - {bus.Name} - {(bus is BusVipModel ? "Vip" : "Normal")}");
                 }
                 var busId = GetIntegerInput("Enter bus' Id:");
                 var tripPrice = GetDecimalInput("Enter trip's price:");
@@ -79,6 +82,10 @@ static void Run()
                 var trip = FindTripbyId(tripId);
                 ShowBusSeats(trip);
                 var seatNumber = GetIntegerInput("Enter seat number:");
+                if (seatNumber < 1 || seatNumber > trip.Bus.BusSeats.Count)
+                {
+                    throw new Exception("Seat number is out of range");
+                }
                 var isSeatFree = CheckSeatIsfree(tripId, seatNumber);
                 if (!isSeatFree)
                 {
@@ -112,7 +119,7 @@ static void Run()
             }
         case "7":
             {
-                var tickets = GetAllTickets();
+                var tickets = GetAllTickets().Where(_ => _.SeatStatus >= 0).ToList();
                 foreach (var ticket in tickets)
                 {
                     Console.WriteLine($"{ticket.Id} - {ticket.PassangerFirstName} {ticket.PassengerLastName}" +
@@ -120,6 +127,25 @@ static void Run()
                 }
                 var ticketId = GetIntegerInput("Enter ticket's id:");
                 CancleTicket(ticketId);
+                break;
+            }
+        case "8":
+            {
+                ViewTrips();
+                var tripId = GetIntegerInput("Enter trip's id:");
+                var trip = FindTripbyId(tripId);
+                trip.Tickets = GetTripTickets(trip);
+                trip.FillSeats();
+                var income = trip.CalculateTripIncome();
+                Console.WriteLine($"Trip Income : {income} - Empty Seats : {trip.Bus.BusSeats.Where(_ => _.SeatStatus == SeatStatus.Free).Count()} " +
+                    $"- Reserve Cancellations : {trip.ReserveCancelation} " +
+                    $"- Purchase Cancellation : {trip.PurchaseCancelation}");
+                trip.Bus.ShowSeats();
+                break;
+            }
+        case "0":
+            {
+                Environment.Exit(0);
                 break;
             }
         default:
@@ -189,11 +215,22 @@ static void ViewTrips()
     {
         Console.WriteLine($"{trip.Id} - Origin: {trip.Origin.ViewData()} - " +
             $"Destination : {trip.Destination.ViewData()} - Bus: {trip.Bus.Name} " +
-            $"{(trip.Bus is BusModel ? "Normal" : "Vip")} - Price: {trip.SeatPrice:M2}");
+            $"{(trip.Bus is BusVipModel ? "Vip" : "Normal")} - Price: {trip.SeatPrice}");
     }
 }
 static void ShowBusSeats(TripModel trip)
 {
+    var purchasedTickets = GetBusPurchasedSeats(trip.Id);
+    var reservedTickets = GetBusReservedSeats(trip.Id);
+    var tickets = purchasedTickets.Concat(reservedTickets);
+    trip.Tickets = tickets.Select(_ => new TicketModel(_.PassangerFirstName, _.PassengerLastName, trip)
+    {
+        PaidPrice = _.PaidPrice,
+        SeatNumber = _.SeatNumber,
+        SeatStatus = _.SeatStatus,
+        Id = _.Id
+    }).ToList();
+    trip.FillSeats();
     if (trip.Bus is BusModel)
     {
         trip.Bus.ShowSeats();
@@ -203,4 +240,15 @@ static void ShowBusSeats(TripModel trip)
         var bus = trip.Bus as BusVipModel;
         bus!.ShowSeats();
     }
+}
+static List<TicketModel>? GetTripTickets(TripModel trip)
+{
+    var tickets = GetTripBusSeats(trip.Id);
+    return tickets.Select(_ => new TicketModel(_.PassangerFirstName, _.PassengerLastName, trip)
+    {
+        PaidPrice = _.PaidPrice,
+        SeatNumber = _.SeatNumber,
+        SeatStatus = _.SeatStatus,
+        Id = _.Id
+    }).ToList();
 }

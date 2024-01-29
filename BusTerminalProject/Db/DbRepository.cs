@@ -38,6 +38,7 @@
 
         public T? FindById(int id)
         {
+            _dbContex = new BusTerminalDbContext();
             return _dbContex.Set<T>().Find(id);
         }
 

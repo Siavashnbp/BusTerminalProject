@@ -13,6 +13,5 @@
         public int ReserveCancelation { get; set; }
         public int PurchaseCancelation { get; set; }
         public List<Ticket>? Tickets { get; set; }
-        public decimal TotalIncome { get; set; }
     }
 }

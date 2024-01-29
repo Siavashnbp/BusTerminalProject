@@ -63,11 +63,17 @@ namespace BusTerminalProject
             {
                 if (bus.BusType == BusType.Normal)
                 {
-                    busModels.Add(new BusModel(bus.Name));
+                    busModels.Add(new BusModel(bus.Name)
+                    {
+                        Id = bus.Id,
+                    });
                 }
                 else
                 {
-                    busModels.Add(new BusVipModel(bus.Name));
+                    busModels.Add(new BusVipModel(bus.Name)
+                    {
+                        Id = bus.Id
+                    });
                 }
             }
             return busModels;
@@ -78,7 +84,10 @@ namespace BusTerminalProject
             var locationModels = new List<LocationModel>();
             foreach (var location in locations)
             {
-                locationModels.Add(new LocationModel(location.Province, location.City, location.Name));
+                locationModels.Add(new LocationModel(location.Province, location.City, location.Name)
+                {
+                    Id = location.Id,
+                });
             }
             return locationModels;
         }
@@ -91,7 +100,11 @@ namespace BusTerminalProject
                 tripsModels.Add(
                     new TripModel(FindLocationById(trip.OriginId)
                     , FindLocationById(trip.DestinationId)
-                    , FindBusById(trip.BusId)));
+                    , FindBusById(trip.BusId))
+                    {
+                        Id = trip.Id,
+                        SeatPrice = trip.SeatPrice,
+                    });
             }
             return tripsModels;
         }
@@ -109,30 +122,44 @@ namespace BusTerminalProject
             var bus = _busRepository.FindById(id);
             if (bus is not null)
             {
-                if (bus.BusType == BusType.Normal)
+                if (bus.BusType == BusType.Vip)
                 {
-                    return new BusModel(bus.Name);
+                    return new BusVipModel(bus.Name);
                 }
                 else
                 {
-                    return new BusVipModel(bus.Name);
+                    return new BusModel(bus.Name);
                 }
             }
             throw new Exception("Bus was not found");
         }
-        public static List<Ticket> GetBusReservedSeats(Trip trip)
+        public static List<Ticket> GetBusReservedSeats(int tripId)
         {
             var db = new BusTerminalDbContext();
             var reservedSeats = db.Tickets
-                .Where(_ => _.TripId == trip.Id && _.SeatStatus == SeatStatus.Reserved).ToList();
+                .Where(_ => _.TripId == tripId && _.SeatStatus == SeatStatus.Reserved).ToList();
             return reservedSeats;
         }
-        public static List<Ticket> GetBusPurchasedSeats(Trip trip)
+        public static List<Ticket> GetBusPurchasedSeats(int tripId)
         {
             var db = new BusTerminalDbContext();
             var purchasedSeats = db.Tickets
-                .Where(_ => _.TripId == trip.Id && _.SeatStatus == SeatStatus.Purchased).ToList();
+                .Where(_ => _.TripId == tripId && _.SeatStatus == SeatStatus.Purchased).ToList();
             return purchasedSeats;
+        }
+        public static List<Ticket> GetBusCancelledSeats(int tripId)
+        {
+            var db = new BusTerminalDbContext();
+            var cancelledSeats = db.Tickets
+                .Where(_ => _.TripId == tripId && _.SeatStatus < 0).ToList();
+            return cancelledSeats;
+        }
+        public static List<Ticket> GetTripBusSeats(int tripId)
+        {
+            var db = new BusTerminalDbContext();
+            var tickets = db.Tickets
+                .Where(_ => _.TripId == tripId).ToList();
+            return tickets;
         }
         public static void ViewBusTypes()
         {
@@ -159,8 +186,14 @@ namespace BusTerminalProject
                 var origin = FindLocationById(trip.OriginId);
                 var destination = FindLocationById(trip.DestinationId);
                 var bus = FindBusById(trip.BusId);
-                var tripModel = new TripModel(origin, destination, bus);
+                var tripModel = new TripModel(origin, destination, bus)
+                {
+                    Id = id,
+                    PurchaseCancelation = trip.PurchaseCancelation,
+                    ReserveCancelation = trip.ReserveCancelation,
+                };
                 tripModel.SeatPrice = trip.SeatPrice;
+                return tripModel;
             }
             throw new Exception("Trip was not found");
         }
@@ -205,16 +238,30 @@ namespace BusTerminalProject
             {
                 throw new Exception("Ticket was not found");
             }
-            var returnPrice = ticket.SeatStatus == SeatStatus.Reserved ?
-                ticket.PaidPrice * 0.1M : ticket.PaidPrice * 0.2M;
             var trip = _tripRepository.FindById(ticket.TripId);
             if (trip is null)
             {
                 throw new Exception("Trip was not found");
             }
-            trip.TotalIncome += returnPrice;
-            _tripRepository.Update(trip);
-            _ticketRepository.Delete(ticket);
+            decimal returnPrice;
+            if (ticket.SeatStatus == SeatStatus.Purchased)
+            {
+                trip.PurchaseCancelation++;
+                returnPrice = trip.SeatPrice * 0.1M;
+            }
+            else
+            {
+                trip.ReserveCancelation++;
+                returnPrice = trip.SeatPrice * 0.2M;
+            }
+            ticket.SeatStatus = (SeatStatus)((int)ticket.SeatStatus * (-1));
+            db.Set<Trip>().Update(trip);
+            db.Set<Ticket>().Update(ticket);
+            var changes = db.SaveChanges();
+            if (changes < 1)
+            {
+                throw new Exception("Changes were not saved");
+            }
             return returnPrice;
         }
         public static List<TicketModel> GetAllTickets()
